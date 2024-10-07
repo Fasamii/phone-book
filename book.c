@@ -67,9 +67,27 @@ linked_list *get_user_input() {
     return parent;
 }
 
+int get_operation_num(linked_list *parent) {
+    return 0;
+}
+
+void search() {
+    printf("-searching-\n");
+}
+
+void add_contact() {
+    printf("-adding-\n");
+}
+
 int main(void) {
 
     linked_list *node = get_user_input();
     print_linkedlist(node);
+ 
+    switch(get_operation_num(node)) {
+        case 0: search(); break;
+        case 1: add_contact(); break;
+    }
+
     free_linkedlist(node);
 }
