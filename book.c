@@ -48,7 +48,10 @@ linked_list *get_user_input() {
             char *str = malloc(count * sizeof(char));
             strcpy(str, ac_command);
             add_to_linkedlist(parent, str);
-            if(ac_chgar == '\n') { return parent; }
+            if(ac_chgar == '\n') { 
+                free(ac_command);    
+                return parent; 
+            }
             for(int i = 0; i < count; i++) {
                 ac_command[i] = '\0';
             }
