@@ -24,6 +24,7 @@ void free_linkedlist(linked_list *node) {
     if(node->next != NULL) {
         free_linkedlist(node->next);
     }
+    free(node->data);
     free(node);
 }
 
@@ -33,6 +34,7 @@ void print_linkedlist(linked_list *node) {
     while(node->next != NULL) {
         node = node->next;
         printf("addr:<| %p |> - data:<| %s |>\n",node, node->data);
+    
     }
 }
 
@@ -40,12 +42,13 @@ linked_list *get_user_input() {
     linked_list *parent = add_to_linkedlist(NULL, NULL);
     char ac_chgar = getchar();
     char *ac_command = malloc(100 * sizeof(char));
-    for(int i = 0; ac_chgar != '\n'; i++) {
-        if(ac_chgar == ' ') {
+    for(int i = 0; 1; i++) {
+        if(ac_chgar == ' ' || ac_chgar == '\n') {
             int count = 0;
             for(int i = 0; ac_command[i] != ' ' && ac_command[i] != '\0'; i++) {
                 count++;
             }
+            printf("strlen - %i\n", strlen(ac_command));
             char *str = malloc(count * sizeof(char));
             strcpy(str, ac_command);
             add_to_linkedlist(parent, str);
@@ -53,6 +56,8 @@ linked_list *get_user_input() {
                 ac_command[i] = ' ';
             }
             i = 0;
+            count = 0;
+            if(ac_chgar == '\n') { break; }
             ac_chgar = getchar();
         } else {
             ac_command[i] = ac_chgar;
