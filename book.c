@@ -24,34 +24,24 @@ void print_linkedlist(linked_list *node) {
     }
 }
 
-linked_list *add_to_linkedlist(linked_list *parent, char *data) {
-    linked_list *node = malloc(sizeof(linked_list));
-    node->next = NULL;
-    node->data = data;
-    while(parent->next != NULL) { parent = parent->next; }
-    parent->next = node;
-    return node;
-}
-
 linked_list *get_user_input() {
     linked_list *node = malloc(sizeof(linked_list));
     linked_list *parent = node;
     int count = 0;
     char ac_char;
     while((ac_char = getchar()) != '\n') {
-        if(ac_char == '\n') { break; }
-        if(ac_char == ' ') {
-            if(count > 0) {
-                node = add_to_linkedlist(parent, NULL);
-                count = 0;
-            }
-        } else {
-            char *new = realloc(node->data, (count + 1) * sizeof(char));
-            node->data = new;
+        if(ac_char != ' ') {
+            node->data = realloc(node->data, (count + 1) * sizeof(char));
             node->data[count] = ac_char;
             count++;
+        } else if(count > 0) {
+            node->next = malloc(sizeof(linked_list));
+            node = node->next;
+            node->next = NULL;
+            node->data = NULL;
+            count = 0;
         }
-    };
+    }
     return parent;
 }
 
