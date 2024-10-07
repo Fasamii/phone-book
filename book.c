@@ -42,25 +42,22 @@ linked_list *get_user_input() {
     linked_list *parent = add_to_linkedlist(NULL, NULL);
     char ac_chgar = getchar();
     char *ac_command = malloc(100 * sizeof(char));
-    for(int i = 0; 1; i++) {
+    int count = 0;
+    while(1) {
         if(ac_chgar == ' ' || ac_chgar == '\n') {
-            int count = 0;
-            for(int i = 0; ac_command[i] != ' ' && ac_command[i] != '\0'; i++) {
-                count++;
-            }
-            printf("strlen - %i\n", strlen(ac_command));
             char *str = malloc(count * sizeof(char));
             strcpy(str, ac_command);
             add_to_linkedlist(parent, str);
-            for(int i = 0; ac_command[i] != '\0'; i++) {
-                ac_command[i] = ' ';
+            if(ac_chgar == '\n') { return parent; }
+            for(int i = 0; i < count; i++) {
+                ac_command[i] = '\0';
             }
-            i = 0;
             count = 0;
-            if(ac_chgar == '\n') { break; }
             ac_chgar = getchar();
+
         } else {
-            ac_command[i] = ac_chgar;
+            ac_command[count] = ac_chgar;
+            count++;
             ac_chgar = getchar();
         }
     }
