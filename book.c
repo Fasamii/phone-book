@@ -8,20 +8,22 @@ typedef struct linked_list {
 } linked_list;
 
 void free_linkedlist(linked_list *node) {
-    if(node->next != NULL) {
-        free_linkedlist(node->next);
+    linked_list *temp;
+    while(node != NULL) {
+        temp = node->next;
+        free(node->data);
+        free(node);
+        node = temp;
     }
-    free(node->data);
-    free(node);
+    return;
 }
 
 void print_linkedlist(linked_list *node) {
-    printf("addr:<| %p |> - data:<| %s |>\n",node, node->data);
-    while(node->next != NULL) {
-        node = node->next;
+    while(node != NULL) {
         printf("addr:<| %p |> - data:<| %s |>\n",node, node->data);
-    
+        node = node->next;
     }
+    return;
 }
 
 linked_list *get_user_input() {
