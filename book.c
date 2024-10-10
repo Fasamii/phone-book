@@ -4,9 +4,14 @@
 
 typedef struct input {
     char *data;
-    short type;
     struct input *next;
 } input;
+
+typedef struct hash {
+    struct hash *next[62];
+    int num;
+    char *name;
+} hash;
 
 void free_linkedlist(input *node) {
     input *temp;
@@ -19,16 +24,52 @@ void free_linkedlist(input *node) {
     return;
 }
 
-void print_linkedlist(input *node) {
-    while(node != NULL) {
-        printf("addr:<| %p |> - data:<| %s |>\n",node, node->data);
-        node = node->next;
+void free_table(hash *parent) {
+    for(int i = 0; i < 62; i++) {
+        if(parent->next[i]) {
+            free_table(parent->next[i]);
+        }
     }
-    return;
+    free(parent);
 }
 
-short get_type(input *node) {
-    
+char encode(char c) {
+    if(c > 64) {
+        if(c > 96) {
+            return (c - 61);
+        }
+        return (c - 55);
+    }
+return (c - 48);
+}
+
+int add(hash *node, char *name, int num) {
+    for(int i = 0, n = strlen(name); i < n; i++) {
+        char index = encode(name[i]);
+        if(!node->next[index]) {
+            hash *new = malloc(sizeof(hash));
+            node = node->next[index] = new;
+        } else {
+            node = node->next[index];
+        }
+    }
+    if(!node->name) {
+        node->name = name;
+        node->num = num;
+        return 0;
+    }
+    return 1;
+}
+
+hash *search_by_name(hash *node, char *name) {
+    for(int i = 0, n = strlen(name); i < n; i++) {
+        char index = encode(name[i]);
+        if(node->next[index] == NULL) { return NULL; }
+        else { 
+            node = node->next[index];
+        }
+    }
+    return node;
 }
 
 input *get_user_input() {
@@ -37,6 +78,7 @@ input *get_user_input() {
     input *parent = node;
     int count = 0;
     char ac_char;
+    node->data = malloc(1);
     while((ac_char = getchar()) != '\n') {
         if(ac_char != ' ') {
             node->data = realloc(node->data, (count + 1) * sizeof(char));
@@ -52,11 +94,29 @@ input *get_user_input() {
     return parent;
 }
 
+char get_operation(input *node) {
+    return 'a';
+}
+
+char *get_name(input *in) {
+    return "fasami";
+}
+
 int main(void) {
 
-    input *node = get_user_input();
-    if(node == NULL) { return -1; }
-    print_linkedlist(node);
-    free_linkedlist(node);
+    hash *parent = malloc(sizeof(hash));
+
+    while(1) {
+        printf("[phone book]$ ");
+        input *node = get_user_input();
+        if(node == NULL) { printf("INCORRECT INPUT\n"); break; }
+        switch (get_operation(node)) {
+            case 'a': add(parent, get_name(node), 123); break;
+            case 'f': printf("number of < %s > is < %i >\n", search_by_name(parent, get_name(node)), get_name(node)); break;
+            case 'q': break; break;
+        }
+        if(node) { free_linkedlist(node); }
+    }
+    free_table(parent);
     return 0;
 }
