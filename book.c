@@ -95,7 +95,12 @@ input *get_user_input() {
 }
 
 char get_operation(input *node) {
-    return 'a';
+    if(node->data[0] == 'q') return 'q';
+    if(node->data[0] == '-') { return 'a'; }
+    if(node->next) {
+        return get_operation(node->next);
+    }
+    return 'f';
 }
 
 char *get_name(input *in) {
@@ -110,10 +115,11 @@ int main(void) {
         printf("[phone book]$ ");
         input *node = get_user_input();
         if(node == NULL) { printf("INCORRECT INPUT\n"); break; }
+        printf("operation < %c >\n", get_operation(node));
         switch (get_operation(node)) {
             case 'a': add(parent, get_name(node), 123); break;
             case 'f': printf("number of < %s > is < %i >\n", search_by_name(parent, get_name(node)), get_name(node)); break;
-            case 'q': break; break;
+            case 'q': return 0; break;
         }
         if(node) { free_linkedlist(node); }
     }
