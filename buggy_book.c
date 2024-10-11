@@ -104,22 +104,26 @@ char get_operation(input *node) {
 }
 
 char *get_name(input *in) {
-    return "fasami";
+    if(in->data) { 
+        if(get_operation(in) == 'f' ) { return in->data; }
+        else { return get_name(in->next); }
+    }
 }
 
 int main(void) {
 
     hash *parent = malloc(sizeof(hash));
+    int run = 1;
 
-    while(1) {
+    while(run) {
         printf("[phone book]$ ");
         input *node = get_user_input();
         if(node == NULL) { printf("INCORRECT INPUT\n"); break; }
         printf("operation < %c >\n", get_operation(node));
         switch (get_operation(node)) {
             case 'a': add(parent, get_name(node), 123); break;
-            case 'f': printf("number of < %s > is < %i >\n", search_by_name(parent, get_name(node)), get_name(node)); break;
-            case 'q': return 0; break;
+            case 'f': printf("number of < %s > is < %i >\n", get_name(node)), search_by_name(parent, get_name(node)); break;
+            case 'q': run = 0; break;
         }
         if(node) { free_linkedlist(node); }
     }
